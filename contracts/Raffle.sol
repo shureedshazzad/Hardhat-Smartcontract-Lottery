@@ -8,15 +8,11 @@ pragma solidity ^0.8.24;
 import "node_modules/@chainlink/contracts/src/v0.8/VRFConsumerBaseV2.sol";
 import "node_modules/@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
 import "node_modules/@chainlink/contracts/src/v0.8/interfaces/AutomationCompatibleInterface.sol";
-//error
+
 error Raffle__NotEnoughETHEntered();
-error Raffle_TransferFailed();
-error Raffle_NotOpen();
-error Raffle__UpkeepNotNeeded(
-    uint256 currentBalance,
-    uint256 numPlayers,
-    uint256 raffleState
-);
+error Raffle__TransferFailed();
+error Raffle__NotOpen();
+error Raffle__UpKeepNotNeeded(uint256 currentBalance, uint256 numPLayers, uint256 raffleState);
 
 /**
  * @title A sample Raffle COntract
@@ -77,7 +73,7 @@ contract Raffle is VRFConsumerBaseV2, AutomationCompatibleInterface {
             revert Raffle__NotEnoughETHEntered();
         }
         if (s_raffleState != RaffleState.OPEN) {
-            revert Raffle_NotOpen();
+            revert Raffle__NotOpen();
         }
         s_players.push(payable(msg.sender));
         // Emit an event when we update a dynamic array or mapping
@@ -107,7 +103,7 @@ contract Raffle is VRFConsumerBaseV2, AutomationCompatibleInterface {
     function performUpkeep(bytes calldata /* performData */) external override {
         (bool upkeepNeeded, ) = checkUpkeep("");
         if (!upkeepNeeded) {
-            revert Raffle__UpkeepNotNeeded(
+            revert Raffle__UpKeepNotNeeded(
                 address(this).balance,
                 s_players.length,
                 uint256(s_raffleState)
@@ -137,7 +133,7 @@ contract Raffle is VRFConsumerBaseV2, AutomationCompatibleInterface {
         (bool success, ) = recentWinner.call{value: address(this).balance}("");
         // require(success)
         if (!success) {
-            revert Raffle_TransferFailed();
+            revert Raffle__TransferFailed();
         }
         emit WinnerPicked(recentWinner);
     }
@@ -180,3 +176,5 @@ contract Raffle is VRFConsumerBaseV2, AutomationCompatibleInterface {
         return i_interval;
     }
 }
+
+

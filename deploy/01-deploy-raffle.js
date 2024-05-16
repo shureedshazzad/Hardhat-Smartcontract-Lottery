@@ -21,10 +21,10 @@ module.exports = async function ({ getNamedAccounts, deployments }) {
         vrfCoordinatorV2Address = networkConfig[chainId]["vrfCoordinatorV2"];
         subscriptionId = networkConfig[chainId]["subscriptionId"];
     }
-    const entranceFee = networkConfig[chainId]["entranceFee"];
+    const entranceFee = networkConfig[chainId]["raffleEntranceFee"];
     const gasLane = networkConfig[chainId]["gasLane"];
     const callBackGasLimit = networkConfig[chainId]["callBackGasLimit"];
-    const interval = networkConfig[chainId]["interval"];
+    const interval = networkConfig[chainId]["keepersUpdateInterval"];
     const args = [
         vrfCoordinatorV2Address,
         entranceFee,

@@ -16,7 +16,6 @@ module.exports = {
   networks: {
     hardhat: {
       chainId: 31337,
-      blockConfirmations: 1,
     },
     sepolia: {
       url: SEPOLIA_RPC_URL,
@@ -24,6 +23,9 @@ module.exports = {
       accounts: [PRIVATE_KEY],
       chainId: 11155111,
     },
+    localhost: {
+      chainId: 31337,
+   },
   },
   etherscan: {
     apiKey: {
