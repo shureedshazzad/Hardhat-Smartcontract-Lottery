@@ -10,9 +10,10 @@ async function mockKeepers() {
         const tx = await raffle.performUpkeep(checkData)
         const txReceipt = await tx.wait(1)
         console.log(txReceipt)
-        const requestId = txReceipt.events[1].args.requestId
+        const requestId = txReceipt.logs[0].topics[1];
         console.log(`Performed upkeep with RequestId: ${requestId}`)
         if (network.config.chainId == 31337) {
+            console.log(requestId);
             await mockVrf(requestId, raffle)
         }
     } else {
@@ -23,7 +24,7 @@ async function mockKeepers() {
 async function mockVrf(requestId, raffle) {
     console.log("We on a local network? Ok let's pretend...")
     const vrfCoordinatorV2Mock = await ethers.getContract("VRFCoordinatorV2Mock")
-    await vrfCoordinatorV2Mock.fulfillRandomWords(requestId, raffle.address)
+    await vrfCoordinatorV2Mock.fulfillRandomWords(requestId, raffle.target);
     console.log("Responded!")
     const recentWinner = await raffle.getRecentWinner()
     console.log(`The winner is: ${recentWinner}`)
